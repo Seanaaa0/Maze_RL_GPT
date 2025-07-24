@@ -12,9 +12,9 @@ maze5_trap = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(maze5_trap)
 
 
-SIZE = 15
-SEED = 659
-MAX_STEPS = 500
+SIZE = 45
+SEED = 784
+MAX_STEPS = 5000
 REQUIRED_SUCCESS = 2
 
 
@@ -32,10 +32,10 @@ full_env.reset(seed=SEED)
 gt = {
     "seed": SEED,
     "size": SIZE,
-    "start_pos": full_env.agent_pos,
-    "goal_pos": full_env.goal_pos,
+    "start_pos": tuple(map(int, full_env.agent_pos)),
+    "goal_pos": tuple(map(int, full_env.goal_pos)),
     "wall_map": full_env.grid.copy(),
-    "trap_list": list(full_env.traps)
+    "trap_list": [list(map(int, t)) for t in full_env.traps]
 }
 gt_path = f"C:/Users/seana/maze/outputs/trap_{SIZE}x{SIZE}_SEED{SEED}.npy"
 os.makedirs(os.path.dirname(gt_path), exist_ok=True)
@@ -87,17 +87,17 @@ while success_count < REQUIRED_SUCCESS:
     results.append({
         "explored_map": (internal_map == 2).astype(np.uint8),
         "known_walls": (internal_map == 0).astype(np.uint8),
-        "known_traps": [[x, y] for x, y in known_traps.union(traps_seen)],
-        "start_pos": [1, 1],
-        "goal_pos": list(full_env.goal_pos),
+        "known_traps": [list(map(int, t)) for t in known_traps.union(traps_seen)],
+        "start_pos": [int(v) for v in full_env.agent_pos],
+        "goal_pos": [int(v) for v in full_env.goal_pos],
         "maze_id": f"maze5_ep{attempts+1}",
-        "trajectory": trajectory
+        "trajectory": [[int(x), int(y)] for x, y in trajectory]
     })
     known_traps.update(traps_seen)
     attempts += 1
 
 # === 儲存 jsonl ===
-save_path = "C:/Users/seana/maze/outputs/mem_trap/maze5_1.jsonl"
+save_path = "C:/Users/seana/maze/outputs/mem_trap/maze5_5.jsonl"
 os.makedirs(os.path.dirname(save_path), exist_ok=True)
 with open(save_path, "w", encoding="utf-8") as f:
     for i, r in enumerate(results):
@@ -109,7 +109,7 @@ with open(save_path, "w", encoding="utf-8") as f:
             "explored_map": r["explored_map"].tolist(),
             "known_walls": r["known_walls"].tolist(),
             "known_traps": r["known_traps"],
-            "trajectory": [[int(x), int(y)] for x, y in r["trajectory"]]
+            "trajectory": r["trajectory"]
         }, f)
         f.write("\n")
 

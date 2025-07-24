@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import collections
 
 # === 載入所有記憶 ===
-jsonl_path = "C:/Users/seana/maze/outputs/mem_trap/maze5_1.jsonl"
+jsonl_path = "C:/Users/seana/maze/outputs/mem_trap/maze5_5.jsonl"
 with open(jsonl_path, "r", encoding="utf-8") as f:
     episodes = [json.loads(line) for line in f]
 

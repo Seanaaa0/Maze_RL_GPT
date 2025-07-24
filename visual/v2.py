@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 👉 請把這裡換成你的檔案路徑
-path = "C:/Users/seana/maze/outputs/multi_200x200_SEED999.npy"
+path = "C:/Users/seana/maze/outputs/non_size15_seed1496.npy"
 
 # 正確讀取 dict 格式的 .npy
 maze_data = np.load(path, allow_pickle=True).item()
